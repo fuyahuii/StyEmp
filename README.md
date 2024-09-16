@@ -30,7 +30,6 @@ empathy and personality expressions.
 
 
 ### **Model Architecture:
-![Model Architecture](./Figs/arch.png)
 <div align="center">
   <img src="./Figs/arch.png" alt="Model Architecture" width="600"/>
 </div>
