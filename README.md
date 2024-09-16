@@ -24,13 +24,11 @@ of a distinct personality. Automatic and human evaluations on the EMPATHETICDIAL
 empathy and personality expressions.
 </p>
 
-![Instruction](./Figs/example.pdf)
-
-[example.pdf](https://github.com/user-attachments/files/17008166/example.pdf)
+![Instruction](./Figs/example.png)
 
 
 ### **Model Architecture:
-![Model Architecture](./Figs/arch.pdf)
+![Model Architecture](./Figs/arch.png)
 
 ### **Preparing Environment
 ```
