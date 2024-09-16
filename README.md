@@ -25,13 +25,13 @@ empathy and personality expressions.
 </p>
 
 <div align="center">
-  <img src="./Figs/example.png" alt="Description" width="600"/>
+  <img src="./Figs/example.png" alt="Description" width="500"/>
 </div>
 
 
 ### **Model Architecture:
 <div align="center">
-  <img src="./Figs/arch.png" alt="Model Architecture" width="600"/>
+  <img src="./Figs/arch.png" alt="Model Architecture" width="500"/>
 </div>
 
 ### **Preparing Environment
