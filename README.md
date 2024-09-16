@@ -26,6 +26,9 @@ empathy and personality expressions.
 
 ![Instruction](./Figs/example.pdf)
 
+[example.pdf](https://github.com/user-attachments/files/17008166/example.pdf)
+
+
 ### **Model Architecture:
 ![Model Architecture](./Figs/arch.pdf)
 
