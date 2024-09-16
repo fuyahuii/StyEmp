@@ -24,7 +24,6 @@ of a distinct personality. Automatic and human evaluations on the EMPATHETICDIAL
 empathy and personality expressions.
 </p>
 
-![Instruction](./Figs/example.png)
 <div align="center">
   <img src="./Figs/example.png" alt="Description" width="600"/>
 </div>
@@ -32,6 +31,9 @@ empathy and personality expressions.
 
 ### **Model Architecture:
 ![Model Architecture](./Figs/arch.png)
+<div align="center">
+  <img src="./Figs/arch.png" alt="Model Architecture" width="600"/>
+</div>
 
 ### **Preparing Environment
 ```
