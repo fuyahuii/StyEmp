@@ -25,7 +25,9 @@ empathy and personality expressions.
 </p>
 
 ![Instruction](./Figs/example.png)
-<img src="./Figs/example.png" alt="Instruction" width="400"/>
+<div align="center">
+  <img src="./path-to-your-image.png" alt="Description" width="600"/>
+</div>
 
 
 ### **Model Architecture:
