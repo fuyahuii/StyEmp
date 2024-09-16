@@ -26,7 +26,7 @@ empathy and personality expressions.
 
 ![Instruction](./Figs/example.png)
 <div align="center">
-  <img src="./path-to-your-image.png" alt="Description" width="600"/>
+  <img src="./Figs/example.png" alt="Description" width="600"/>
 </div>
 
 
