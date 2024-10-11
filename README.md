@@ -30,18 +30,20 @@ empathy and personality expressions.
 </div>
 
 
-### **Model Architecture:
+### **Model Architecture**
 <div align="center">
   <img src="./Figs/arch.png" alt="Model Architecture" width="450"/>
 </div>
 
-### **Preparing Environment
+### **Preparing Environment**
 ```
 mamba env create -f env.yml -n styemp
-mamba activate styemp
+conda activate styemp
 ```
-### **Experiments
+### **Experiments**
 DialoGPT with Multi-grained Prefix Encoder for candidate generation
+#### **Training**
+
 
 
 
