@@ -53,7 +53,7 @@ The best checkpoints for predictors can be downloaded from [here](https://drive.
 ```
 python src/train_generator.py
 ```
-The best checkpoints can be downloaded from [here](https://drive.google.com/drive/u/0/folders/10vlibYEYHXvqjey9mZP9qBYGzV5q_2w5)
+The best checkpoints can be downloaded from [here](https://drive.google.com/drive/u/0/folders/10vlibYEYHXvqjey9mZP9qBYGzV5q_2w5).
 #### **Inference**
 ```
 python src/inference.py
@@ -63,7 +63,7 @@ python src/inference.py
 ```
 python src/calibrate_generator.py
 ```
-The best checkpoint can be downloaded from [here](https://drive.google.com/drive/u/0/folders/15SaRe9akp1ONGFUkhp-7LKXTXYWnR5r7)
+The best checkpoint can be downloaded from [here](https://drive.google.com/drive/u/0/folders/15SaRe9akp1ONGFUkhp-7LKXTXYWnR5r7).
 #### **Inference**
 ```
 python src/inference_calibration.py
