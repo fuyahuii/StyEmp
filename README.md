@@ -36,4 +36,6 @@ empathy and personality expressions.
 
 ### **Preparing Environment
 ```
+conda env create -f env.yml -n styemp
+conda activate styemp
 ```
