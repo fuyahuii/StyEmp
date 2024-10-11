@@ -43,7 +43,9 @@ conda activate styemp
 ### **Experiments**
 DialoGPT with Multi-grained Prefix Encoder for candidate generation
 #### **Training**
-
+```
+python src/train_generator.py
+```
 
 
 
