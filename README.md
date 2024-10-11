@@ -46,7 +46,7 @@ conda activate styemp
 python signals_predictor/train_personality.py
 python signals_predictor/rain_empathy_intent.py
 ```
-The best checkpoints for predictors can be downloaded from [here](https://drive.google.com/drive/u/0/folders/1zQSeIlz9qOI3jWV2IieNfqUoCHgz-NDq), which will be further used as the custom evaluation metrics.
+The best checkpoints for predictors can be downloaded from [here](https://drive.google.com/drive/u/0/folders/1DnkYM8XA1b9o-b8eN1fHk96_Va0tkoxI), which will be further used as the custom evaluation metrics.
 
 ### **Multi-grained Prefix Encoder**
 #### **Training**
