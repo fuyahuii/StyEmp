@@ -40,7 +40,7 @@ empathy and personality expressions.
 mamba env create -f env.yml -n styemp
 conda activate styemp
 ```
-### **Personality, ECM, and Intent Predictor Preparation**
+### **Personality, ECM, and Intent Predictors Preparation**
 ```
 python signals_predictor/train_personality.py
 python signals_predictor/rain_empathy_intent.py
