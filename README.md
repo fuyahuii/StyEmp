@@ -2,10 +2,11 @@ The official codes for the paper: Yahui Fu, Chenhui Chu, Tatsuya Kawahara. "[Sty
 
 If you find this repository or paper useful, please kindly cite our paper:
 ```
-@article{fu2024styemp,
+@inproceedings{fu2024styemp,
   title={StyEmp: Stylizing Empathetic Response Generation via Multi-Grained Prefix Encoder and Personality Reinforcement},
   author={Fu, Yahui and Chu, Chenhui and Kawahara, Tatsuya},
   booktitle={Proceedings of the 25th Annual Meeting of the Special Interest Group on Discourse and Dialogue},
+  pages={172--185},
   year={2024}
 }
 ```
