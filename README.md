@@ -40,12 +40,33 @@ empathy and personality expressions.
 mamba env create -f env.yml -n styemp
 conda activate styemp
 ```
+### **Personality, ECM, Intent predictor preparation**
+```
+python signals_predictor/train_personality.py
+python signals_predictor/rain_empathy_intent.py
+```
+The best checkpoints for predictors can be downloaded from [here][https://drive.google.com/drive/u/0/folders/1zQSeIlz9qOI3jWV2IieNfqUoCHgz-NDq], which will be further used as the custom evaluation metrics.
+
 ### **Experiments**
 DialoGPT with Multi-grained Prefix Encoder for candidate generation
 #### **Training**
 ```
 python src/train_generator.py
 ```
-
+The best checkpoints can be downloaded from [here][https://drive.google.com/drive/u/0/folders/10vlibYEYHXvqjey9mZP9qBYGzV5q_2w5]
+#### **Inference**
+```
+python src/inference.py
+```
+Multi-grained Prefix Encoder with Personality Reinforcement
+#### **Training**
+```
+python src/calibrate_generator.py
+```
+The best checkpoint can be downloaded from [here][https://drive.google.com/drive/u/0/folders/15SaRe9akp1ONGFUkhp-7LKXTXYWnR5r7]
+#### **Inference**
+```
+python src/inference_calibration.py
+```
 
 
