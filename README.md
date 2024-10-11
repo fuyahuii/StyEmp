@@ -47,8 +47,7 @@ python signals_predictor/rain_empathy_intent.py
 ```
 The best checkpoints for predictors can be downloaded from [here](https://drive.google.com/drive/u/0/folders/1zQSeIlz9qOI3jWV2IieNfqUoCHgz-NDq), which will be further used as the custom evaluation metrics.
 
-### **Experiments**
-1. DialoGPT with Multi-grained Prefix Encoder for candidate generation
+### **Multi-grained Prefix Encoder**
 #### **Training**
 ```
 python src/train_generator.py
@@ -58,7 +57,7 @@ The best checkpoints can be downloaded from [here](https://drive.google.com/driv
 ```
 python src/inference.py
 ```
-2. Multi-grained Prefix Encoder with Personality Reinforcement
+### **Multi-grained Prefix Encoder with Personality Reinforcement**
 #### **Training**
 ```
 python src/calibrate_generator.py
