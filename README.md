@@ -37,6 +37,11 @@ empathy and personality expressions.
 
 ### **Preparing Environment
 ```
-conda env create -f env.yml -n styemp
-conda activate styemp
+mamba env create -f env.yml -n styemp
+mamba activate styemp
 ```
+### **Experiments
+DialoGPT with Multi-grained Prefix Encoder for candidate generation
+
+
+
