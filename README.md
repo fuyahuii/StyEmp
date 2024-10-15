@@ -58,6 +58,9 @@ The best checkpoints can be downloaded from [here](https://drive.google.com/driv
 ```
 python src/inference.py
 ```
+To use the Multi-grained Prefix Encoder with DialoGPT for response generation, set the `calibration` argument to `False`.
+Setting `calibration` to `True` will generate multiple candidate responses, as demonstrated in the Personality Reinforcement module.
+
 ### **Multi-grained Prefix Encoder with Personality Reinforcement**
 #### **Training**
 ```
