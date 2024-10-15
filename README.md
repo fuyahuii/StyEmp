@@ -60,6 +60,7 @@ python src/inference.py
 ```
 To use the Multi-grained Prefix Encoder with DialoGPT for response generation only, set the `calibration` argument to `False`.
 Setting `calibration` to `True` will generate multiple candidate responses, as demonstrated in the Personality Reinforcement module, which is needed for the following training. 
+
 Please download the bleurt for the evaluation from [here](https://github.com/google-research/bleurt).
 
 ### **Multi-grained Prefix Encoder with Personality Reinforcement**
