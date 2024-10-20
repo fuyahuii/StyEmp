@@ -44,10 +44,10 @@ def main():
     parser.add_argument("--calibration", default=True, help="Whether for calibration or normal response generation")
     
     parser.add_argument("--stylizeEncoder", default=True, help="whether to use stylizeEncoder")
-    parser.add_argument("--style",type=str, default="context", help="choose from [personality, empathy, both, context,none]")
+    parser.add_argument("--style",type=str, default="both", help="choose from [personality, empathy, both, context,none]")
     parser.add_argument('--personality_reinforcement', default=True, help="whether to use personality reinforcement")
-    parser.add_argument('--addcontext', default='True', help="whether to add context slots")
-    parser.add_argument('--concontext', default='False', help="whether to add context embeddings")
+    parser.add_argument('--addcontext', default='False', help="whether to add context slots")
+    parser.add_argument('--concontext', default='True', help="whether to add context embeddings")
     parser.add_argument('--diffencoder', default='False', help="whether to use different encoder for style and context")
     parser.add_argument('--num_candidate', type=int, default=5, help="number of candidates for calibration")
     
@@ -55,8 +55,8 @@ def main():
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--warmup', type=int, default=0)
     parser.add_argument('--tqdm', default=True,help="whether to use tqdm")
-    parser.add_argument('--speaker_slots', type=int, default=30, help="number of speaker slots")
-    parser.add_argument('--empathy_slots', type=int, default=30, help="number of empathy slots")
+    parser.add_argument('--speaker_slots', type=int, default=25, help="number of speaker slots")
+    parser.add_argument('--empathy_slots', type=int, default=25, help="number of empathy slots")
     
     args=parser.parse_args()
     print(args)
@@ -70,12 +70,7 @@ def main():
     stylizeEncoder=args.stylizeEncoder
     style=args.style
     
-    # save_variable="style_none_batch_size_64_lr_5e-05_warmup_0_dataset4"
-    # save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_dataset4_addcontext_False_concontext_True_diffencoder_True"
-    # save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_30_empathy_30_dataset4_addcontext"
-    # save_variable="style_empathy_batch_size_64_lr_5e-05_warmup_0_speaker_20_empathy_20_dataset4_addcontext_True_concontext_False_diffencoder_True"
-    # save_variable="style_personality_batch_size_64_lr_5e-05_warmup_0_speaker_20_empathy_20_dataset4_addcontext_True_diffencoder_True"
-    save_variable="style_context_batch_size_64_lr_5e-05_warmup_0_speaker_30_empathy_30_dataset4_addcontext"
+    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_False" 
     model_path=os.path.join(model_path,save_variable)
     log_path=os.path.join(log_path,save_variable)
     result_path=os.path.join(result_path,save_variable)
@@ -100,7 +95,7 @@ def main():
     roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-base", use_fast=True)
 
     if stylizeEncoder:
-        dataset = load_from_disk(f"{data_path}/empathetic_dataset_retrieval4")
+        dataset = load_from_disk(f"{data_path}/empathetic_dataset_retrieval")
 
     else:  
         dataset = load_from_disk(f"{data_path}/empathetic_dataset")
@@ -192,10 +187,9 @@ def main():
         generated_responses=generation_calibrate(trainer, dataset["train"], calibrate_input,args)   
     else:
         generated_responses=generation(trainer, dataset["test"], result_path,args)
-        eval(generated_responses, result_path)
         custom_evalutions(generated_responses,result_path)
+        eval(generated_responses, result_path)
         
- 
 def generation(trainer, dataset, result_path,args):
     set_seed(42)
     

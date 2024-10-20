@@ -44,7 +44,7 @@ class EmotionClassifier():
 
 	def __init__(self, 
 			device,
-			Emotion_model_path = '../Evaluations/Pretrained/emotion_roberta-base_epochs15_lr2e-05_dropout0.1_warmup0_seed12/model.pt',
+			Emotion_model_path = './src/custom_eval/pretrained_signals/emotion_roberta-base_epochs15_lr2e-05_dropout0.1_warmup0_seed12/model.pt',
 			batch_size=1024):
 		
 		self.batch_size = batch_size
@@ -81,9 +81,9 @@ class PersonalityClassifier():
 
 	def __init__(self, 
 			device,
-			Personality_model_path = '../Evaluations/Pretrained/big5_preprocessing_hidden16_mse_lr2e-05_pretrainstudio-ousia_luke-base_dropout0.2_warmup100/model.pt',
-			MBTI_intro_model_path='../Evaluations/Pretrained/MBTI_introverted_regression_mse_hidden16_lr1e-05_batch_size120_pretrainstudio-ousia_luke-base_dropout0.1_warmup100/model.pt',
-			MBTI_thinking_model_path='../Evaluations/Pretrained/MBTI_thinking_regression_mse_hidden16_lr1e-05_batch_size128_pretrainstudio-ousia_luke-base_dropout0.1_warmup100/model.pt',
+			Personality_model_path = './src/custom_eval/pretrained_signals/big5_preprocessing_hidden16_mse_lr2e-05_pretrainstudio-ousia_luke-base_dropout0.2_warmup100/model.pt',
+			MBTI_intro_model_path='./src/custom_eval/pretrained_signals/MBTI_introverted_regression_mse_hidden16_lr1e-05_batch_size120_pretrainstudio-ousia_luke-base_dropout0.1_warmup100/model.pt',
+			MBTI_thinking_model_path='./src/custom_eval/pretrained_signals/MBTI_thinking_regression_mse_hidden16_lr1e-05_batch_size128_pretrainstudio-ousia_luke-base_dropout0.1_warmup100/model.pt',
 			batch_size=1024):
 		
 		self.batch_size = batch_size
@@ -145,10 +145,10 @@ class EmpathyClassifier():
 
 	def __init__(self, 
 			device,
-			ER_model_path = '../Evaluations/Pretrained/emotion_react_roberta-base_epochs4_lr2e-05_dropout0.1_warmup0_seed12/model.pt', 
-			IP_model_path = '../Evaluations/Pretrained/interpretations_studio-ousia_luke-base_epochs4_lr2e-05_dropout0.1_warmup0_seed12/model.pt',
-			EX_model_path = '../Evaluations/Pretrained/explorations_roberta-base_epochs5_lr2e-05_dropout0.1_warmup0_seed12/model.pt',
-			EI_model_path = '../Evaluations/Pretrained/intent_studio-ousia_luke-base_epochs7_lr2e-05_dropout0.1_warmup0_seed12/model1.pt',
+			ER_model_path = './src/custom_eval/pretrained_signals/emotion_react_roberta-base_epochs4_lr2e-05_dropout0.1_warmup0_seed12/model.pt', 
+			IP_model_path = './src/custom_eval/pretrained_signals/interpretations_studio-ousia_luke-base_epochs4_lr2e-05_dropout0.1_warmup0_seed12/model.pt',
+			EX_model_path = './src/custom_eval/pretrained_signals/explorations_roberta-base_epochs5_lr2e-05_dropout0.1_warmup0_seed12/model.pt',
+			EI_model_path = './src/custom_eval/pretrained_signals/intent_studio-ousia_luke-base_epochs7_lr2e-05_dropout0.1_warmup0_seed12/model1.pt',
 			batch_size=1024):
 		
 		self.batch_size = batch_size

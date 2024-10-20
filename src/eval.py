@@ -1,12 +1,7 @@
 import os
 # os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-import json
-import copy
-import random
-import argparse
 import numpy as np
-from tqdm.auto import trange, tqdm
-from collections import defaultdict, Counter
+from tqdm.auto import tqdm
 from nltk.tokenize import word_tokenize
 from nltk.translate.bleu_score import sentence_bleu, corpus_bleu
 from ignite.metrics import RougeL
@@ -17,39 +12,9 @@ from nlgeval.pycocoevalcap.bleu.bleu import Bleu
 from nlgeval.pycocoevalcap.meteor.meteor import Meteor
 from sentence_transformers import SentenceTransformer,util
 import csv
-import gc
 import nltk
 nltk.download('wordnet')
 nltk.download('omw-1.4')
-
-import torch
-from torch import nn
-
-# from transformers import set_seed
-# from datasets import load_from_disk
-
-# from sentence_transformers import SentenceTransformer
-import pandas as pd
-
-def distinct(seqs):
-    """ Calculate intra/inter distinct 1/2. """
-    batch_size = len(seqs)
-    intra_dist1, intra_dist2 = [], []
-    unigrams_all, bigrams_all = Counter(), Counter()
-    for seq in seqs:
-        unigrams = Counter(seq)
-        bigrams = Counter(zip(seq, seq[1:]))
-        intra_dist1.append((len(unigrams)+1e-12) / (len(seq)+1e-5))
-        intra_dist2.append((len(bigrams)+1e-12) / (max(0, len(seq)-1)+1e-5))
-
-        unigrams_all.update(unigrams)
-        bigrams_all.update(bigrams)
-
-    inter_dist1 = (len(unigrams_all)+1e-12) / (sum(unigrams_all.values())+1e-5)
-    inter_dist2 = (len(bigrams_all)+1e-12) / (sum(bigrams_all.values())+1e-5)
-    intra_dist1 = np.average(intra_dist1)
-    intra_dist2 = np.average(intra_dist2)
-    return intra_dist1, intra_dist2, inter_dist1, inter_dist2
 
 def calc_distinct_n(n, candidates, print_score: bool = True):
     ngram_counts = {}
@@ -124,7 +89,6 @@ def style_similarity(refs, cands):
 
 def bleurt(label_texts, generated_texts,filename):
     scorer = bleurt_score.BleurtScorer('./BLEURT-20') # please download the bleurt checkpoint from https://github.com/google-research/bleurt
-    # scorer=bleurt_score.LengthBatchingBleurtScorer('./BLEURT-20-D12')
     bleurt_result = scorer.score(references=label_texts, candidates=generated_texts)
     print(filename)
     print(f"BELURT: {np.mean(bleurt_result)*100:.2f}") 
@@ -133,40 +97,17 @@ def bleurt(label_texts, generated_texts,filename):
     return bleurt_result
     
     
-# if __name__ == "__main__":
 def eval(generations, results_path):    
-    #load csv file
-    # file_name='style_empathy_batch_size_64_lr_5e-05_warmup_0_speaker_30_empathy_30_dataset4_addcontext_False_con/generated_p0.8_t0.7.csv'
-    # generation=pd.read_csv('output/result/'+file_name)
+
     filename=results_path.split('/')[-1]
     print("filename",filename)
-    # generation=pd.read_csv(results_path+'/generated_p0.8_t0.7.csv')
-    # 
+
     generated_text=generations['generated'].tolist()
     label_text=generations['label'].tolist()
     
     print(len(generated_text),len(label_text))
     print(generated_text[0])
     print(label_text[0])  
-    # 
-    # file='baseline_responses/hyp_T5_comet_xy.txt'
-    # print(file)
-    # with open(file, 'r') as f:
-    #     generated=f.readlines()
-    # generated_texts=[item.strip() for item in generated]
-    
-    # with open('baseline_responses/ref_cem.txt', 'r') as f:
-    #     label=f.readlines()
-    # label_texts=[item.strip() for item in label]
-    
-    # generation=pd.read_csv('baseline_responses/chatgpt_comet_k2.csv')
-    # label_text=generation['gold_resp'].tolist()
-    # generated_text=generation['pred_resp'].tolist()
-    # generated_text=[item.replace("spk2: ","") for item in generated_text]
-    
-    #for each generated text, replace the [SEP] token with ""
-    # label_texts=[item.replace("[SPK1] ","").replace("[SPK2] ","") for item in label_texts]
-    # generated_texts=[item.replace("[SPK1] ","").replace("[SPK2] ","") for item in generated_texts]
 
     filtered_pairs = [(gen, label) for gen, label in zip(generated_text, label_text) if isinstance(gen, str)]
     generated_texts, label_texts = zip(*filtered_pairs)
@@ -175,8 +116,6 @@ def eval(generations, results_path):
     label_texts = [item.lower() for item in label_texts]
     
     print(len(generated_text),len(label_text))
-    print(generated_text[:2])
-    print(label_text[:2])
 
     # BERTScore
     # print("Computing BERTScore...")
@@ -216,7 +155,7 @@ def eval(generations, results_path):
     bleurt_result=bleurt(label_texts, generated_texts,filename)
 
     output_file=open('output/result/eval_result.csv','a')
-    output_file=open('calibration/output/result/eval_result.csv','a')
+    # output_file=open('calibration/output/result/eval_result.csv','a')
     csv_writer = csv.writer(output_file, delimiter=',', quotechar='"')
     
     csv_writer.writerow([filename])

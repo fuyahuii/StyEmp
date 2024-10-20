@@ -153,10 +153,7 @@ def main():
     args=parser.parse_args()
     print(args)
     
-    # save_variable=f"style_{args.style}_batch_size_{args.batach_size}_lr_{args.lr}_warmup_{args.warmup}_speaker_{args.speaker_slots}_empathy_{args.empathy_slots}_dataset4_addcontext"
-    # save_variable="style_none_batch_size_64_lr_5e-05_warmup_0_dataset4"
-    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_dataset4_addcontext_False_concontext_True_diffencoder_True"
-    # save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_30_empathy_30_dataset4_addcontext"
+    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_True"
     # save_variable="style_empathy_batch_size_64_lr_5e-05_warmup_0_speaker_20_empathy_20_dataset4_addcontext_True_concontext_False_diffencoder_True"
     # save_variable="style_personality_batch_size_64_lr_5e-05_warmup_0_speaker_20_empathy_20_dataset4_addcontext_True_diffencoder_True"
     # save_variable="style_context_batch_size_64_lr_5e-05_warmup_0_speaker_30_empathy_30_dataset4_addcontext"
@@ -170,7 +167,7 @@ def main():
     if not os.path.exists(data_path):
         os.makedirs(data_path)
         
-    save_variable=save_variable+f"top_can_num_{args.top_can_num}_true_weight_{args.true_weight}_per_weight_{args.per_weight}_lm_weight_{args.lm_weight}_bz_{args.batch_size}_1"
+    save_variable=save_variable+f"top_can_num_{args.top_can_num}_true_weight_{args.true_weight}_per_weight_{args.per_weight}_lm_weight_{args.lm_weight}_bz_{args.batch_size}"
     model_output_path=os.path.join(args.model_output_path,save_variable)
     
     result_output_path=os.path.join(args.result_output_path,save_variable)
@@ -191,7 +188,7 @@ def main():
     roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-base", use_fast=True)
 
     if args.stylizeEncoder:
-        dataset_path = os.path.join(data_path, "empathetic_dataset_retrieval4_calibrate")
+        dataset_path = os.path.join(data_path, "empathetic_dataset_retrieval_calibrate")
  
         if local_rank <= 0 and not os.path.exists(dataset_path):
             print(f"tokenizing data in {dataset_path} ...")
@@ -214,13 +211,13 @@ def main():
             if os.path.exists(os.path.join(result_temp_path,"calibration_personality_ranked_train.csv")):
                 candidate_output=pd.read_csv(os.path.join(result_temp_path,"calibration_personality_ranked_train.csv"))
             else:
-                ground_truth_scores=pd.read_csv("./dataset/retrieved_dataset/dataset4/train.csv")
+                ground_truth_scores=pd.read_csv("./dataset/retrieved_dataset/train.csv")
                 candidate_output=personality_loss(candidate_scores,ground_truth_scores,result_temp_path)
         
             dataset = load_dataset("empathetic_dialogues")
-            conversation_train=pd.read_csv("./dataset/retrieved_dataset/dataset4/train.csv")
-            conversation_valid=pd.read_csv("./dataset/retrieved_dataset/dataset4/valid.csv")
-            conversation_test=pd.read_csv("./dataset/retrieved_dataset/dataset4/test.csv")
+            conversation_train=pd.read_csv("./dataset/retrieved_dataset/train.csv")
+            conversation_valid=pd.read_csv("./dataset/retrieved_dataset/valid.csv")
+            conversation_test=pd.read_csv("./dataset/retrieved_dataset/test.csv")
             
             print("train shape: ", len(conversation_train))
             print("validation shape: ", len(conversation_valid))
@@ -234,7 +231,6 @@ def main():
             all_indices = np.arange(total_length)
             update_indices = np.delete(all_indices, np.arange(0, total_length, args.top_can_num + 1))
             conversation_train_new.loc[update_indices, "response"] = can_response[:len(update_indices)]  
-            # conversation_train_new.to_csv(os.path.join("./dataset/retrieved_dataset/dataset4/calibrate_temp/"+save_variable+"/temp.csv"), index=False)
             
             encoded_train_data = convert_and_map(conversation_train_new, encode_example,tokenizer, roberta_tokenizer, data_type="train")
             encoded_validation_data = convert_and_map(conversation_valid, encode_example,tokenizer, roberta_tokenizer, data_type="validation")
@@ -361,11 +357,10 @@ def main():
     print(trainer.evaluate(dataset["test"]))
     print("generate responses")
     generated_responses=generation(trainer, dataset["test"], result_output_path)
-    eval(generated_responses, result_output_path)
     custom_evalutions(generated_responses,result_output_path)
+    eval(generated_responses, result_output_path)
     
-    
-    
+
 def generation(trainer, dataset, result_path):
     set_seed(42)
 

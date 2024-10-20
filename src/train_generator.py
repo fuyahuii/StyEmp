@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import shutil
 import argparse
 import pandas as pd
@@ -149,7 +149,7 @@ def retrieval_process(dataset,args):
         "big5_e": big5_e_train[i], "mbti_intro": mbti_intro_train[i], "mbti_thinking": mbti_thinking_train[i]}
         for i, item in enumerate(conversation_train)
     ]
-    pd.DataFrame(conversation_train_updated).to_csv(os.path.join(args.data_path, "retrieved_dataset/dataset4/train.csv"))
+    pd.DataFrame(conversation_train_updated).to_csv(os.path.join(args.retrieved_path, "train.csv"))
 
     conversation_dev_new_updated = [
         {**item, "retrieved_context": retrieved_conversation_dev[i]["context"], 
@@ -160,7 +160,7 @@ def retrieval_process(dataset,args):
         "big5_e": big5_e_dev[i], "mbti_intro": mbti_intro_dev[i], "mbti_thinking": mbti_thinking_dev[i]}
         for i, item in enumerate(conversation_dev_new)
     ]
-    pd.DataFrame(conversation_dev_new_updated).to_csv(os.path.join(args.data_path, "retrieved_dataset/dataset4/valid.csv"))
+    pd.DataFrame(conversation_dev_new_updated).to_csv(os.path.join(args.retrieved_path, "valid.csv"))
     
     conversation_test_new_updated = [
         {**item, "retrieved_context": retrieved_conversation_test[i]["context"], 
@@ -171,7 +171,7 @@ def retrieval_process(dataset,args):
         "big5_e": big5_e_test[i], "mbti_intro": mbti_intro_test[i], "mbti_thinking": mbti_thinking_test[i]}
         for i, item in enumerate(conversation_test_new)
     ]
-    pd.DataFrame(conversation_test_new_updated).to_csv(os.path.join(args.data_path, "retrieved_dataset/dataset4/test.csv"))  
+    pd.DataFrame(conversation_test_new_updated).to_csv(os.path.join(args.retrieved_path, "test.csv"))  
 
     print("train data shape: ", len(conversation_train_updated))
     print("dev data shape: ", len(conversation_dev_new_updated))
@@ -189,16 +189,17 @@ def main():
     local_rank = int(os.environ.get("LOCAL_RANK", -1))
     parser= argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, help="path to the dataset", default="dataset")
-    parser.add_argument("--temp_path", type=str, help="path to save temporary data files", default="dataset/temp/dataset3")
-    parser.add_argument('--model_path', type=str, help="path to save trained model", default="output/model/dataset3")
-    parser.add_argument('--log_path', type=str, help="path to save log", default="output/log/dataset3")
-    parser.add_argument('--result_path', type=str, help="path to save result", default="output/result/dataset3")
+    parser.add_argument("--temp_path", type=str, help="path to save temporary data files", default="dataset/temp")
+    parser.add_argument('--retrieved_path',type=str, help="path to save data after retrieval processing",default='dataset/retrieved_dataset')
+    parser.add_argument('--model_path', type=str, help="path to save trained model", default="output/model")
+    parser.add_argument('--log_path', type=str, help="path to save log", default="output/log")
+    parser.add_argument('--result_path', type=str, help="path to save result", default="output/result")
     parser.add_argument("--stylizeEncoder", default=True, help="whether to use stylizeEncoder")
     parser.add_argument("--style",type=str, default="both", help="choose from [personality, empathy, both, context,none]")
     parser.add_argument('--personality_reinforcement', action='store_true', help="whether to use personality reinforcement")
     parser.add_argument('--addcontext', default='False', help="whether to add context slots")
     parser.add_argument('--concontext', default='True', help="whether to add context embeddings")
-    parser.add_argument('--diffencoder', default='False', help="whether to use different encoder for style and context")
+    parser.add_argument('--diffencoder', default='True', help="whether to use different encoder for style and context")
     
     parser.add_argument('--batch_size', type=int, default=64)
     parser.add_argument('--lr', type=float, default=5e-5)
@@ -212,16 +213,16 @@ def main():
     
     data_path=args.data_path
     temp_path=args.temp_path
+    retrieved_path=args.retrieved_path
     model_path=args.model_path
     log_path=args.log_path
     result_path=args.result_path
     stylizeEncoder=args.stylizeEncoder
     style=args.style
 
-    save_variable=f"style_{args.style}_batch_size_{args.batch_size}_lr_{args.lr}_warmup_{args.warmup}_speaker_{args.speaker_slots}_empathy_{args.empathy_slots}_dataset3_addcontext_{args.addcontext}_concontext_{args.concontext}_diffencoder_{args.diffencoder}" 
-    #addcontext is false and con means concatenate style and context by dimension 2, only style slots
-    #addcontext is true means concatenate style and context by dimension 1, means both style and context slots.
-    # save_variable=f"style_{args.style}_batch_size_{args.batch_size}_lr_{args.lr}_warmup_{args.warmup}_dataset3_addcontext"
+    save_variable=f"style_{args.style}_batch_size_{args.batch_size}_lr_{args.lr}_warmup_{args.warmup}_speaker_{args.speaker_slots}_empathy_{args.empathy_slots}_addcontext_{args.addcontext}_concontext_{args.concontext}_diffencoder_{args.diffencoder}" 
+    #addcontext==False and concontext==True means concatenate style and context by dimension 2, only style slots.
+    #addcontext==True and concontext==False means concatenate style and context by dimension 1, means both style and context slots.
     model_path=os.path.join(model_path,save_variable)
     log_path=os.path.join(log_path,save_variable)
     result_path=os.path.join(result_path,save_variable)
@@ -235,19 +236,15 @@ def main():
         os.makedirs(result_path)
     if not os.path.exists(temp_path):
         os.makedirs(temp_path)
+    if not os.path.exists(retrieved_path):
+        os.makedirs(retrieved_path)
         
     tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small", use_fast=True)
     tokenizer.pad_token = tokenizer.eos_token
     roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-base", use_fast=True)
-    
-    #check whether [SPK1] and [SPK2] are in the vocabulary
-    # for add_token in ["[SPK1]","[SPK2]"]:
-    #     if add_token not in tokenizer.get_vocab():
-    #         tokenizer.add_tokens(add_token)
-    #         roberta_tokenizer.add_tokens(add_token)
 
     if stylizeEncoder:
-        dataset_path = os.path.join(data_path, "empathetic_dataset_retrieval3")
+        dataset_path = os.path.join(data_path, "empathetic_dataset_retrieval")
  
         if local_rank <= 0 and not os.path.exists(dataset_path):
             print(f"tokenizing data in {data_path} ...")
@@ -270,8 +267,7 @@ def main():
             encoded_dataset.save_to_disk(dataset_path)
             del dataset, encoded_dataset
         
-        dataset = load_from_disk(f"{data_path}/empathetic_dataset_retrieval3")
-   
+        dataset = load_from_disk(f"{data_path}/empathetic_dataset_retrieval")
 
     else:
         dataset_path = os.path.join(data_path, "empathetic_dataset")
@@ -294,7 +290,6 @@ def main():
         dataset = load_from_disk(f"{data_path}/empathetic_dataset")
         
     print(f"data loaded from {data_path}")
-    # data_columns=["input_ids","attention_mask","labels","context_ids","context_attention_mask"]
     data_columns = ['input_ids', 'attention_mask', 'labels']
     
     if stylizeEncoder:       
@@ -320,19 +315,14 @@ def main():
         model = GPT2LMHeadModel.from_pretrained("microsoft/DialoGPT-small")
         wandb.init(project="Empathetic_GPT2", name=save_variable)
            
-    # model.resize_token_embeddings(len(tokenizer))
     
     dataset.set_format(
     type="torch",
     columns=data_columns)   
-    # max_style_num = args.num_ref
-    # max_semantic_num = args.num_ref
     data_collator = DataCollator(
         tokenizer, 
         roberta_tokenizer,
         model,
-        # max_style_num=max_style_num,
-        # max_semantic_num=max_semantic_num,
     )
 
     training_args = TrainingArguments(
@@ -350,7 +340,7 @@ def main():
         logging_dir=log_path,
         evaluation_strategy="steps",
         logging_first_step=False,
-        logging_steps=100,    # eval_steps is default to this value
+        logging_steps=100,    
         eval_steps=1000,
         save_steps=1000,
         save_total_limit=1,
@@ -393,10 +383,9 @@ def main():
     print(trainer.evaluate(dataset["test"]))
     print("generate responses")
     generated_responses=generation(trainer, dataset["test"], result_path)
-    eval(generated_responses, result_path)
     custom_evalutions(generated_responses,result_path)
-    
-    
+    eval(generated_responses, result_path)
+      
 def generation(trainer, dataset, result_path):
     set_seed(42)
 
@@ -409,8 +398,6 @@ def generation(trainer, dataset, result_path):
         top_p=0.8,
         top_k=0,
         temperature=0.7,
-        # num_beams=3,
-        # no_repeat_ngram_size=3,
         disable_tqdm=not tqdm,
     ) 
     

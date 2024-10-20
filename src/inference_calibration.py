@@ -37,7 +37,7 @@ import json
 def main():
     local_rank = int(os.environ.get("LOCAL_RANK", -1))
     parser= argparse.ArgumentParser()
-    parser.add_argument('--data_path', type=str, help="path to the dataset", default="calibration/dataset_calibrate1")
+    parser.add_argument('--data_path', type=str, help="path to the dataset", default="calibration")
     parser.add_argument('--model_path', type=str, help="path to save trained model after calibration", default="calibration/output/model")
     parser.add_argument('--result_input_path', type=str, help="path to obtain generated responses before calibration", default="calibration/input")
     parser.add_argument('--result_output_path', type=str, help="path to save generated responses after calibration", default="calibration/output/result")
@@ -73,16 +73,10 @@ def main():
     stylizeEncoder=args.stylizeEncoder
     style=args.style
  
-    # save_variable="style_none_batch_size_64_lr_5e-05_warmup_0_dataset4"
-    # save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_dataset4_addcontext_False_concontext_True_diffencoder_True"
-    # save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_30_empathy_30_dataset4_addcontext"
-    # save_variable="style_empathy_batch_size_64_lr_5e-05_warmup_0_speaker_20_empathy_20_dataset4_addcontext_True_concontext_False_diffencoder_True"
-    # save_variable="style_personality_batch_size_64_lr_5e-05_warmup_0_speaker_20_empathy_20_dataset4_addcontext_True_diffencoder_True"
-    # save_variable="style_context_batch_size_64_lr_5e-05_warmup_0_speaker_30_empathy_30_dataset4_addcontext"
-    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_dataset4_addcontext_False_concontext_True_diffencoder_True_calibrate_num_candidate_5"
+    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_True_calibrate_num_candidate_5"
     data_path=os.path.join(args.data_path,save_variable)
     
-    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_dataset4_addcontext_False_concontext_True_diffencoder_Truetop_can_num_5_true_weight_0_per_weight_5_lm_weight_1_bz_96"
+    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_Truetop_can_num_5_true_weight_0_per_weight_5_lm_weight_1_bz_96"
     model_path=os.path.join(model_path,save_variable)
     log_path=os.path.join(log_path,save_variable)
     result_path=os.path.join(result_path,save_variable)
@@ -108,7 +102,7 @@ def main():
     roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-base", use_fast=True)
 
     if stylizeEncoder:
-        dataset = load_from_disk(f"{data_path}/empathetic_dataset_retrieval4_calibrate")
+        dataset = load_from_disk(f"{data_path}/empathetic_dataset_retrieval_calibrate")
 
     else:  
         dataset = load_from_disk(f"{data_path}/empathetic_dataset")
@@ -194,16 +188,10 @@ def main():
         callbacks=[EarlyStoppingCallback(early_stopping_patience=10)],
     )
       
-    # # generated_responses=generation(trainer, dataset["test"].select(range(2)), result_path) 
-    # if args.calibration:
-    #     # generated_responses=generation_calibrate(trainer, dataset["train"], calibrate_input,args)   
-    #     generated_responses=generation_calibrate(trainer, dataset["train"], calibrate_input,args)   
-    # else:
     generated_responses=generation(trainer, dataset["test"], result_path,args)
     eval(generated_responses, result_path)
-    # custom_evalutions(generated_responses,result_path)
+    custom_evalutions(generated_responses,result_path)
         
- 
 def generation(trainer, dataset, result_path,args):
     set_seed(42)
     
@@ -222,35 +210,6 @@ def generation(trainer, dataset, result_path,args):
     )
     generation=pd.DataFrame(generated)
     generation.to_csv(os.path.join(result_path, "generated_p0.9_t0.8.csv"))
-    
-    return generation
-
-
-def generation_calibrate(trainer, dataset, calibrate_input,args):
-    
-    set_seed(42) 
-    print(f"num_return_sequences: {args.num_candidate}")
-    
-    generated = generate_responses_calibrate(
-        trainer,
-        dataset,
-        max_length=40,
-        min_length=10, 
-        num_return_sequences=args.num_candidate, 
-        do_sample=False,
-        top_p=0.9,
-        top_k=0,
-        temperature=0.7,
-        num_beams=args.num_candidate,
-        num_beam_groups=args.num_candidate,
-        diversity_penalty=4.0,
-        repetition_penalty=1.0,
-        length_penalty=1.0,
-        # encoder_no_repeat_ngram_size=3,
-        disable_tqdm=not args.tqdm,
-    )
-    generation=pd.DataFrame(generated)
-    generation.to_csv(os.path.join(calibrate_input, "calibration_p0.9_t0.7_train.csv"))
     
     return generation
 
