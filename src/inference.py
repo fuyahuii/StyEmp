@@ -70,7 +70,7 @@ def main():
     stylizeEncoder=args.stylizeEncoder
     style=args.style
     
-    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_False" 
+    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_True" 
     model_path=os.path.join(model_path,save_variable)
     log_path=os.path.join(log_path,save_variable)
     result_path=os.path.join(result_path,save_variable)
