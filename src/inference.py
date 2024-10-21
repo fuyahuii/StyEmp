@@ -48,7 +48,7 @@ def main():
     parser.add_argument('--personality_reinforcement', default=True, help="whether to use personality reinforcement")
     parser.add_argument('--addcontext', default='False', help="whether to add context slots")
     parser.add_argument('--concontext', default='True', help="whether to add context embeddings")
-    parser.add_argument('--diffencoder', default='False', help="whether to use different encoder for style and context")
+    parser.add_argument('--diffencoder', default='True', help="whether to use different encoder for style and context")
     parser.add_argument('--num_candidate', type=int, default=5, help="number of candidates for calibration")
     
     parser.add_argument('--batch_size', type=int, default=64)
