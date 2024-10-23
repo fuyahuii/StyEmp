@@ -1,16 +1,7 @@
 **This repository is currently being updated and is not yet complete.**
 
 The official codes for the paper: Yahui Fu, Chenhui Chu, Tatsuya Kawahara. "[StyEmp: Stylizing Empathetic Response Generation via Multi-Grained Prefix Encoder and Personality Reinforcement](https://arxiv.org/pdf/2408.02271)." SIGDIAL 2024.
-If you find this repository or paper useful, please kindly cite our paper:
-```
-@inproceedings{fu2024styemp,
-  title={StyEmp: Stylizing Empathetic Response Generation via Multi-Grained Prefix Encoder and Personality Reinforcement},
-  author={Fu, Yahui and Chu, Chenhui and Kawahara, Tatsuya},
-  booktitle={Proceedings of the 25th Annual Meeting of the Special Interest Group on Discourse and Dialogue},
-  pages={172--185},
-  year={2024}
-}
-```
+
 ### **Abstract**
 <p style="text-align: justify;">
 Recent approaches for empathetic response
@@ -73,5 +64,16 @@ The best checkpoint can be downloaded from [here](https://drive.google.com/drive
 ```
 python src/inference_calibration.py
 ```
-
-
+### **Citation**
+If you find this repository or paper useful, please kindly cite our paper:
+```
+@inproceedings{fu2024styemp,
+  title={StyEmp: Stylizing Empathetic Response Generation via Multi-Grained Prefix Encoder and Personality Reinforcement},
+  author={Fu, Yahui and Chu, Chenhui and Kawahara, Tatsuya},
+  booktitle={Proceedings of the 25th Annual Meeting of the Special Interest Group on Discourse and Dialogue},
+  pages={172--185},
+  year={2024}
+}
+```
+### **Contact**
+For any questions related to the paper or this repository, feel free to contact Yahui Fu at [fu.yahuiii@gmail.com](mailto:fu.yahuiii@gmail.com).
