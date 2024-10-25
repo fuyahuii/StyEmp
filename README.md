@@ -1,5 +1,3 @@
-**This repository is currently being updated and is not yet complete.**
-
 The official codes for the paper: Yahui Fu, Chenhui Chu, Tatsuya Kawahara. "[StyEmp: Stylizing Empathetic Response Generation via Multi-Grained Prefix Encoder and Personality Reinforcement](https://arxiv.org/pdf/2408.02271)." SIGDIAL 2024.
 
 ### **Abstract**
