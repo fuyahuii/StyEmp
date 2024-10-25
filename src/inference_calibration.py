@@ -52,7 +52,8 @@ def main():
     parser.add_argument('--diffencoder', default='True', help="whether to use different encoder for style and context")
     
     parser.add_argument('--num_candidate', type=int, default=5)
-    parser.add_argument('--batch_size',type=int, default=96) #96 4
+    parser.add_argument('--batch_size',type=int, default=64, help="batch size in MgPE+DialoGPT")
+    parser.add_argument('--bz',type=int, default=96, help="batch size in personality reinforcement module") #96 4
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--warmup', type=int, default=0)
     parser.add_argument("--true_weight", type=float, default=0, help="weight for true response rank loss")
@@ -76,7 +77,7 @@ def main():
     save_variable=f"style_{args.style}_batch_size_{args.batch_size}_lr_{args.lr}_warmup_{args.warmup}_speaker_{args.speaker_slots}_empathy_{args.empathy_slots}_addcontext_{args.addcontext}_concontext_{args.concontext}_diffencoder_{args.diffencoder}" 
     data_path=os.path.join(args.data_path,save_variable,f"num_candidate_{args.num_candidate}")
     
-    save_variable=save_variable+f"num_candidate_{args.num_candidate}_true_weight_{args.true_weight}_per_weight_{args.per_weight}_lm_weight_{args.lm_weight}_bz_{args.batch_size}" #after calibration
+    save_variable=save_variable+f"num_candidate_{args.num_candidate}_true_weight_{args.true_weight}_per_weight_{args.per_weight}_lm_weight_{args.lm_weight}_bz_{args.bz}" #after calibration
     model_path=os.path.join(model_path,save_variable)
     log_path=os.path.join(log_path,save_variable)
     result_path=os.path.join(result_path,save_variable)

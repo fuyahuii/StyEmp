@@ -57,6 +57,7 @@ class CustomTrainer(Trainer):
         if model.training:    
             batch_size = max(inputs["input_ids"].shape[0] // (self.num_candidate + 1), 1)
             assert batch_size==inputs["input_ids"].shape[0]/(self.num_candidate+1)
+            
             # if inputs["input_ids"].shape[0]/(self.num_candidate+1) != batch_size:
             #     inputs["input_ids"] = inputs["input_ids"][:batch_size*(self.num_candidate+1)]
             #     original_logits = original_logits[:batch_size*(self.num_candidate+1)]
@@ -140,7 +141,8 @@ def main():
     parser.add_argument('--diffencoder', default='True', help="whether to use different encoder for style and context")
     
     parser.add_argument('--num_candidate', type=int, default=5,help="number of candidate responses")
-    parser.add_argument('--batch_size',type=int, default=96) #96 4
+    parser.add_argument('--batch_size',type=int, default=64, help="batch size in MgPE+DialoGPT")
+    parser.add_argument('--bz',type=int, default=96, help="batch size in personality reinforcement module") #96 4
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--warmup', type=int, default=0)
     parser.add_argument("--true_weight", type=float, default=0, help="weight for true response rank loss")
@@ -168,7 +170,7 @@ def main():
     if not os.path.exists(data_path):
         os.makedirs(data_path)
         
-    save_variable=save_variable+f"num_candidate_{args.num_candidate}_true_weight_{args.true_weight}_per_weight_{args.per_weight}_lm_weight_{args.lm_weight}_bz_{args.batch_size}"
+    save_variable=save_variable+f"num_candidate_{args.num_candidate}_true_weight_{args.true_weight}_per_weight_{args.per_weight}_lm_weight_{args.lm_weight}_bz_{args.bz}"
     model_output_path=os.path.join(args.model_output_path,save_variable)
     
     result_output_path=os.path.join(args.result_output_path,save_variable)
