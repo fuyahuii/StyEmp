@@ -57,7 +57,7 @@ Please download the bleurt for the evaluation from [here](https://github.com/goo
 ### **Multi-grained Prefix Encoder with Personality Reinforcement**
 #### **Training**
 ```
-python src/calibrate_generator.py
+python src/train_generator_calibration.py
 ```
 The best checkpoint can be downloaded from [here](https://drive.google.com/drive/u/0/folders/15SaRe9akp1ONGFUkhp-7LKXTXYWnR5r7).
 #### **Inference only**
