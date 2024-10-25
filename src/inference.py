@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import shutil
 import argparse
 import pandas as pd
@@ -48,7 +48,7 @@ def main():
     parser.add_argument('--personality_reinforcement', default=True, help="whether to use personality reinforcement")
     parser.add_argument('--addcontext', default='False', help="whether to add context slots")
     parser.add_argument('--concontext', default='True', help="whether to add context embeddings")
-    parser.add_argument('--diffencoder', default='False', help="whether to use different encoder for style and context")
+    parser.add_argument('--diffencoder', default='True', help="whether to use different encoder for style and context")
     parser.add_argument('--num_candidate', type=int, default=5, help="number of candidates for calibration")
     
     parser.add_argument('--batch_size', type=int, default=64)
@@ -70,7 +70,7 @@ def main():
     stylizeEncoder=args.stylizeEncoder
     style=args.style
     
-    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_False" 
+    save_variable=f"style_{args.style}_batch_size_{args.batch_size}_lr_{args.lr}_warmup_{args.warmup}_speaker_{args.speaker_slots}_empathy_{args.empathy_slots}_addcontext_{args.addcontext}_concontext_{args.concontext}_diffencoder_{args.diffencoder}" 
     model_path=os.path.join(model_path,save_variable)
     log_path=os.path.join(log_path,save_variable)
     result_path=os.path.join(result_path,save_variable)
@@ -207,7 +207,7 @@ def generation(trainer, dataset, result_path,args):
         disable_tqdm=not tqdm,
     )
     generation=pd.DataFrame(generated)
-    generation.to_csv(os.path.join(result_path, "generated_p0.8_t0.7.csv"))
+    generation.to_csv(os.path.join(result_path, "generated_p0.8_t0.71.csv"))
     
     return generation
 

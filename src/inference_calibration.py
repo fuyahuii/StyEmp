@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import shutil
 import argparse
 import pandas as pd
@@ -37,11 +37,11 @@ import json
 def main():
     local_rank = int(os.environ.get("LOCAL_RANK", -1))
     parser= argparse.ArgumentParser()
-    parser.add_argument('--data_path', type=str, help="path to the dataset", default="calibration")
+    parser.add_argument('--data_path', type=str, help="path to the dataset", default="calibration/empathetic_dataset_retrieval_calibrate")
     parser.add_argument('--model_path', type=str, help="path to save trained model after calibration", default="calibration/output/model")
     parser.add_argument('--result_input_path', type=str, help="path to obtain generated responses before calibration", default="calibration/input")
     parser.add_argument('--result_output_path', type=str, help="path to save generated responses after calibration", default="calibration/output/result")
-    parser.add_argument('--temp_path', type=str, help="path to save log", default="calibration/output/temp")
+    parser.add_argument('--temp_path', type=str, help="path to save temporary files", default="calibration/output/temp")
     parser.add_argument('--log_path', type=str, help="path to save log", default="calibration/output/log")
     
     parser.add_argument("--stylizeEncoder", default=True, help="whether to use stylizeEncoder")
@@ -51,7 +51,7 @@ def main():
     parser.add_argument('--concontext', default='True', help="whether to add context embeddings")
     parser.add_argument('--diffencoder', default='True', help="whether to use different encoder for style and context")
     
-    parser.add_argument('--top_can_num', type=int, default=5)
+    parser.add_argument('--num_candidate', type=int, default=5)
     parser.add_argument('--batch_size',type=int, default=96) #96 4
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--warmup', type=int, default=0)
@@ -73,10 +73,10 @@ def main():
     stylizeEncoder=args.stylizeEncoder
     style=args.style
  
-    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_True_calibrate_num_candidate_5"
-    data_path=os.path.join(args.data_path,save_variable)
+    save_variable=f"style_{args.style}_batch_size_{args.batch_size}_lr_{args.lr}_warmup_{args.warmup}_speaker_{args.speaker_slots}_empathy_{args.empathy_slots}_addcontext_{args.addcontext}_concontext_{args.concontext}_diffencoder_{args.diffencoder}" 
+    data_path=os.path.join(args.data_path,save_variable,f"num_candidate_{args.num_candidate}")
     
-    save_variable="style_both_batch_size_64_lr_5e-05_warmup_0_speaker_25_empathy_25_addcontext_False_concontext_True_diffencoder_Truetop_can_num_5_true_weight_0_per_weight_5_lm_weight_1_bz_96"
+    save_variable=save_variable+f"num_candidate_{args.num_candidate}_true_weight_{args.true_weight}_per_weight_{args.per_weight}_lm_weight_{args.lm_weight}_bz_{args.batch_size}" #after calibration
     model_path=os.path.join(model_path,save_variable)
     log_path=os.path.join(log_path,save_variable)
     result_path=os.path.join(result_path,save_variable)
@@ -102,10 +102,10 @@ def main():
     roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-base", use_fast=True)
 
     if stylizeEncoder:
-        dataset = load_from_disk(f"{data_path}/empathetic_dataset_retrieval_calibrate")
+        dataset = load_from_disk(f"{data_path}")
 
     else:  
-        dataset = load_from_disk(f"{data_path}/empathetic_dataset")
+        dataset = load_from_disk("dataset/empathetic_dataset")
         
     print(f"data loaded from {data_path}")
     data_columns=["input_ids","attention_mask","labels"]
@@ -189,8 +189,9 @@ def main():
     )
       
     generated_responses=generation(trainer, dataset["test"], result_path,args)
-    eval(generated_responses, result_path)
     custom_evalutions(generated_responses,result_path)
+    eval(generated_responses, result_path)
+    
         
 def generation(trainer, dataset, result_path,args):
     set_seed(42)
