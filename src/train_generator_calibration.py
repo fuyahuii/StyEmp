@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import shutil
 import argparse
 import pandas as pd
@@ -298,7 +298,7 @@ def main():
         output_dir=model_output_path, 
         overwrite_output_dir=True,
         num_train_epochs=15, 
-        per_device_train_batch_size=args.batch_size,  
+        per_device_train_batch_size=args.bz,  
         per_device_eval_batch_size=64, 
         gradient_accumulation_steps=4,
         learning_rate=args.lr,
