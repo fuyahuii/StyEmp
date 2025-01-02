@@ -35,7 +35,7 @@ conda activate styemp
 python signals_predictor/train_personality.py
 python signals_predictor/rain_empathy_intent.py
 ```
-The best checkpoints for predictors can be downloaded from [here](https://drive.google.com/drive/u/0/folders/1crIPGDlEKQjw68LtZvZyoPou-1UGb9BR), which will be further used as the custom evaluation metrics, please put them into the folder src/custom_eval/pretrained_signals.
+The best checkpoints for predictors can be downloaded from [here](https://drive.google.com/drive/u/0/folders/1crIPGDlEKQjw68LtZvZyoPou-1UGb9BR), which will be further used as the custom evaluation metrics, please put them into the folder src/custom_eval/pretrained_signals. The preprocessed MBTI and BIG FIVE train/valid/test sets from the PANDORA dataset can also be downloaded from [here](https://drive.google.com/drive/u/0/folders/1crIPGDlEKQjw68LtZvZyoPou-1UGb9BR) if you want to train the personality predictors by yourself.
 
 ### **Multi-grained Prefix Encoder**
 #### **Training**
